@@ -1,4 +1,6 @@
 import React from "react";
+import SeasonDisplay from "./component/SeasonDisplay";
+import Spinner from "./component/Spinner";
 
 // const App = () => {
 //   window.navigator.geolocation.getCurrentPosition(
@@ -14,11 +16,10 @@ import React from "react";
 // };
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
+  //no need of intitalizing state inside constructor as babel internall converts to same format
+  state = { lat: null, errorMessage: "" };
 
-    this.state = { lat: null, errorMessage: "" };
-
+  componentDidMount() {
     window.navigator.geolocation.getCurrentPosition(
       (position) => {
         console.log(position);
@@ -31,16 +32,20 @@ class App extends React.Component {
     );
   }
 
-  render() {
+  rederBody() {
     if (this.state.errorMessage && !this.state.lat) {
       return <div>Error : {this.state.errorMessage}</div>;
     }
 
     if (!this.state.errorMessage && this.state.lat) {
-      return <div>Lattitude : {this.state.lat} </div>;
+      return <SeasonDisplay latitude={this.state.lat} />;
     }
 
-    return <div>loading ...!</div>;
+    return <Spinner />;
+  }
+
+  render() {
+    return <div className="border red solid">{this.rederBody()}</div>;
   }
 }
 
